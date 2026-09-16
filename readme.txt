@@ -11,8 +11,11 @@ Name: Hannes Lindberg
 Contribution:
  - Task 1
 
-Name:
+Name: Hugo Karlsson
 Contribution:
+- Task 2
+- Task 4
+- Task 5
 
 Name:
 Contribution:

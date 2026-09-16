@@ -45,7 +45,7 @@ def main():
                 service_code = (input("Service Code: ")).upper()
                 consolidate_delivery_quote(distance, weight, service_code)
             case 4:
-                lable = input("Lable? ")
+                lable = input("Lable: ")
                 consolidate_parcel_labels(lable)
             case 5:
                 van_cap = float(input("Van capacity: "))

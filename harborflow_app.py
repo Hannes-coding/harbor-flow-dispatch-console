@@ -68,11 +68,6 @@ def main():
 # Booking reference: HFL-N4R-2048 (Invalid)
 # Invalid booking reference. 
 
-def remove_leading_and_trailing_spaces(reference):
-   reference = reference.strip()
-   reference = reference.upper()
-   return reference
-
 def contains_hyphens(reference):
     return reference[3] == "-" and reference[7] == "-"
 
@@ -83,7 +78,7 @@ def contains_numbers(reference):
     return reference[8:12].isdigit()
 
 def validate_reference(reference):
-    reference = remove_leading_and_trailing_spaces(reference)
+    reference = reference.strip().upper()
     if len(reference) == 12 and contains_hyphens(reference) and contains_letters(reference) and contains_numbers(reference):
         return reference
     else:

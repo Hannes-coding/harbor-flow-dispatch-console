@@ -48,5 +48,50 @@ def main():
             case 7:
                 pass
 
+
+#TASK 3
+def consolidate_delivery_quote():
+
+
+    # Input by user and base variables
+    Base_charge = 45.00
+    distance = float(input("Distance (km): "))
+    Weight = float(input("Weight (kg): "))
+    service_multiplier = (input("Service Code): ")).upper()
+
+    # Validate inputs
+    if distance <= 0 or Weight <= 0:
+        print("Error: Distance and weight must be positive numbers.")
+        return
+
+    # Determine service type and multiplier
+    if service_multiplier == "S":
+        service_multiplier = 1.0
+        service_code = "S"
+    elif service_multiplier == "X":
+        service_multiplier = 1.25
+        service_code = "X"
+    elif service_multiplier == "P":
+        service_multiplier = 1.6
+        service_code = "P"
+    else:
+        print("Error: Invalid service type.")
+        return
+
+    # Calculate the delivery quote
+    subtotal = Base_charge + (distance * 6.50) + (Weight * 4.00)
+    quote = subtotal * service_multiplier
+
+
+    print(f"Delivery Quote: {quote:.2f} SEK")
+
+
+if __name__ == "__main__":
+    consolidate_delivery_quote()
+
+
 if __name__ == "__main__":
     main()
+
+
+    

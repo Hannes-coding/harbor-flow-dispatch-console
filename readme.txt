@@ -17,8 +17,10 @@ Contribution:
 - Task 4
 - Task 5
 
-Name:
-Contribution:
+Name: Brian Rauch
+Contribution: 
+- Task 3
+- Task 7
 
 Name (if applicable):
 Contribution:

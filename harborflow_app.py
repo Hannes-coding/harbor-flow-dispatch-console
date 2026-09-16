@@ -86,8 +86,7 @@ def consolidate_delivery_quote():
     print(f"Delivery Quote: {quote:.2f} SEK")
 
 
-if __name__ == "__main__":
-    consolidate_delivery_quote()
+
 
 
 if __name__ == "__main__":

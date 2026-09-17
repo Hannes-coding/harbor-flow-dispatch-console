@@ -27,7 +27,7 @@ def main():
         try:
             program_id = int(program_id)
             if program_id < 1 or program_id > 8:
-                raise ValueError("Invalid input")
+                raise ValueError("Error - Select a service from 1 to 8.")
         except ValueError as error:
             print(error)
 
@@ -41,28 +41,85 @@ def main():
                 print(normalized_reference)
             case 3:
                 distance = float(input("Distance (km): "))
+                while distance < 0:
+                    print("Error - Value must be greater than zero.")
+                    distance = float(input("Distance (km): "))
+
                 weight = float(input("Weight (kg): "))
+                while weight < 0:
+                    print("Error - Value must be greater than zero.")
+                    weight = float(input("Weight (kg): "))
+
                 service_code = (input("Service Code: ")).upper()
+                while service_code != "X" and service_code != "S" and service_code != "P":
+                    print("Error - Service code must be S, X or P.")
+                    service_code = (input("Service Code: ")).upper().strip()
                 consolidate_delivery_quote(distance, weight, service_code)
             case 4:
                 lable = input("Lable: ")
                 consolidate_parcel_labels(lable)
             case 5:
                 van_cap = float(input("Van capacity: "))
-                weights_input = input("Enter parcel weights separated by commas: ")
-                parecel_weights = [float(w.strip()) for w in weights_input.split(",")]
+                while van_cap < 0:
+                    print("Invalid input")
+                    van_cap = float(input("Van capacity: "))
+
+                while True:
+                    weights_input = input("Enter parcel weights separated by commas: ").split(',')
+                    parecel_weights = []
+
+                    try:
+                        for weight_input in weights_input:
+                            weight = float(weight_input.strip())
+                            if weight < 0:
+                                raise ValueError
+                            parecel_weights.append(weight)
+                    except ValueError:
+                        print("Invalid input")
+                        continue
+
+                    break
+
                 check_van_capacity(van_cap, parecel_weights)
             case 6:
                 promised_minutes = float(input("Promised minutes: "))
+                while promised_minutes < 0:
+                    print("Error - Value must be greater than zero.")
+                    promised_minutes = float(input("Promised minutes: "))
+
                 actual_minutes = float(input("Actual minutes: "))
+                while actual_minutes < 0:
+                    print("Error - Value must be greater than zero.")
+                    actual_minutes = float(input("Actual minutes: "))
+
                 damaged_parcels = int(input("Damaged parcels: "))
+                while damaged_parcels < 0:
+                    print("Error - Value must be greater than zero.")
+                    damaged_parcels = int(input("Damaged parcels: "))
+
                 delay, status = classify_service_performance(promised_minutes, actual_minutes, damaged_parcels)
 
                 print(f"Delay: {delay} minutes")
                 print(f"Service status: {status}")
             case 7:
                     raw_deliveries = input("Completed deliveries: ")
+                    while True:
+                        delivery_parts = raw_deliveries.split(",")
+                        try:
+                            deliveries = [int(part.strip()) for part in delivery_parts]
+                            if len(deliveries) != 7 or any(delivery < 0 for delivery in deliveries):
+                                raise ValueError
+                        except ValueError:
+                            print("Error - Enter exactly 7 non-negative delivery counts separated by commas.")
+                            raw_deliveries = input("Completed deliveries: ")
+                            continue
+                        break
+                    
                     target = int(input("Daily target: "))
+                    while target < 0:
+                        print("Error - Value must be greater than zero.")
+                        target = int(input("Daily target: "))
+
                     weekly_report(raw_deliveries, target)
             case 8:
                 pass
@@ -101,11 +158,6 @@ def validate_reference(reference):
 
 def consolidate_delivery_quote(distance, weight, service_code):
     Base_charge = 45.00
-
-    # Validate arguments
-    if distance <= 0 or weight <= 0:
-        print("Error: Distance and weight must be positive numbers.")
-        return
 
     # Determine service type and multiplier
     if service_code == "S":
@@ -250,12 +302,34 @@ def weekly_report(raw_deliveries, target):
         if delivery >= target:
             days_meeting_target += 1
 
+
+    print(f"Completed deliveries: {deliveries}")
+    print(f"Daily target: {target}")
     print("Weekly dispatch report")
     print(f"Total deliveries: {total}")
     print(f"Average per day: {average:.2f}")
     print(f"Highest day: {highest_day} ({highest_delivery})")
     print(f"Lowest day: {lowest_day} ({lowest_delivery})")
     print(f"Days meeting target: {days_meeting_target}")
+
+#Task 8
+#Make validation loops incase user enters a value outside of the range.
+#rules:
+#1) After an error, repeat only the affected prompt.
+#2) The program must not crash
+
+#Templates
+#Error - Select a service from 1 to 8.
+#Error - Value must be greater than zero.
+#Error - Service code must be S, X or P.
+#Error - Weekly report requires 7 delivery counts.
+
+#What is Done
+#Updated Case 3 (Line 42-58)
+#Updated Case 5 (Line 61-84)
+#Updated case 6 (Line 84-104)
+#Updated case 7 (Line 104-124)
+#Selecting service part was perfectly done by Hannes so I just added template.
 
 
 if __name__ == "__main__":

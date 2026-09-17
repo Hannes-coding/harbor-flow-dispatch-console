@@ -122,7 +122,16 @@ def main():
 
                     weekly_report(raw_deliveries, target)
             case 8:
-                pass
+                distance = float(input("Distance (km): "))
+                while distance < 0:
+                    print("Error - Value must be greater than zero.")
+                    distance = float(input("Distance (km): "))
+
+                weight = float(input("Weight (kg): "))
+                while weight < 0:
+                    print("Error - Value must be greater than zero.")
+                    weight = float(input("Weight (kg): "))
+                compare_delivery_scenarios(distance, weight)
 
 # TASK 2
 # Booking reference: hfl-nor-2048
@@ -329,7 +338,45 @@ def weekly_report(raw_deliveries, target):
 #Updated Case 5 (Line 61-84)
 #Updated case 6 (Line 84-104)
 #Updated case 7 (Line 104-124)
+#Added case 8 (Line 124-134)
 #Selecting service part was perfectly done by Hannes so I just added template.
+
+
+
+#Task 9
+#Compare delivery scenarios
+
+#Reuse your quote calculation function to calculate all three service prices
+#Print each option and identify the cheapest and most expensive service
+
+#Technical expectations
+#Do not copy the quote formula three times.
+#A single calculation function must accept the service code or multiplier.
+#Keep the printed order Standard, Express, Priority.
+#Format every price with exactly two decimal places
+#After Task 8 is implemented, validate distance and weight before calculating.
+
+def compare_delivery_scenarios(distance, weight):
+
+    subtotal = 45.00 + (distance * 6.50) + (weight * 4.00)
+    
+    standard = subtotal
+    express = subtotal * 1.25
+    priority = subtotal * 1.6
+
+    cheap = min(standard, express, priority)
+    expensive = max(standard, express, priority)
+    
+
+    print(f"Distance (km): {distance}")
+    print(f"Wight (kg): {weight}")
+    print("Service comparison")
+    print(f"Standard: {standard:.2f} SEK")
+    print(f"express: {express:.2f} SEK")
+    print(f"priority: {priority:.2f} SEK")
+    print(f"Cheapest Service: {cheap}")
+    print(f"Most Expensive Service: {expensive}")
+
 
 
 if __name__ == "__main__":

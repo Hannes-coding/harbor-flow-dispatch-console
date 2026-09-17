@@ -23,9 +23,10 @@ Contribution:
 - Task 3
 - Task 7
 
-Name (if applicable):
+Nam: Aytunch Tuzdzhu
 Contribution:
-
+- Task 8
+- Task 9
 Design notes
 ------------
 Main function boundaries:

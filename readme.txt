@@ -9,7 +9,8 @@ Team members and concrete contributions
 ---------------------------------------
 Name: Hannes Lindberg
 Contribution:
- - Task 1
+- Task 1
+- Task 6
 
 Name: Hugo Karlsson
 Contribution:

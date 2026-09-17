@@ -49,13 +49,17 @@ def main():
                 consolidate_parcel_labels(lable)
             case 5:
                 van_cap = float(input("Van capacity: "))
-
                 weights_input = input("Enter parcel weights separated by commas: ")
                 parecel_weights = [float(w.strip()) for w in weights_input.split(",")]
-
                 check_van_capacity(van_cap, parecel_weights)
             case 6:
-                pass
+                promised_minutes = float(input("Promised minutes: "))
+                actual_minutes = float(input("Actual minutes: "))
+                damaged_parcels = int(input("Damaged parcels: "))
+                delay, status = classify_service_performance(promised_minutes, actual_minutes, damaged_parcels)
+
+                print(f"Delay: {delay} minutes")
+                print(f"Service status: {status}")
             case 7:
                 pass
             case 8:
@@ -185,6 +189,33 @@ def check_van_capacity(van_cap, parecel_weights):
     print(f"Accepted parcels: {accepted_parcels}")
     print(f"Loaded weight: {(van_cap - free_weight):.2f} kg")
     print(f"Remaining capacity: {free_weight:.2f} kg")
+
+# TASK 6
+# Calculate the delay and status for a delivered shippment.
+#
+# ARGUMENTS
+# promised_minutes (float): The estimated minutes for the shippment in minutes
+# actual_minites (float): The actual time the shippment took in minutes.
+# damaged_parcels (int): The number of damaged parcels upon arriving.
+#
+# RETURNS
+# delay (float): The delay in minutes.
+# status (string): A description of the shippment status 
+#   (e.i minor or major delay or on time, but most importantly "servide failure" if one of the parcels is damaged).
+def classify_service_performance(promised_minutes, actual_minutes, damaged_parcels):
+    delay = actual_minutes - promised_minutes
+
+    if damaged_parcels > 0:
+        status = "SERVICE FAILURE"
+    elif delay <= 0:
+        status = "ON TIME"
+    elif delay <= 15 :
+        status = "MINOR DELAY"
+    else:
+        status = "MAJOR DELAY"
+
+    return delay, status
+    
 
 if __name__ == "__main__":
     main()

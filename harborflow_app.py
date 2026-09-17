@@ -61,7 +61,9 @@ def main():
                 print(f"Delay: {delay} minutes")
                 print(f"Service status: {status}")
             case 7:
-                pass
+                    raw_deliveries = input("Completed deliveries: ")
+                    target = int(input("Daily target: "))
+                    weekly_report(raw_deliveries, target)
             case 8:
                 pass
 
@@ -215,7 +217,46 @@ def classify_service_performance(promised_minutes, actual_minutes, damaged_parce
         status = "MAJOR DELAY"
 
     return delay, status
-    
+
+#TASK 7
+def weekly_report(raw_deliveries, target):
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+    parts = raw_deliveries.split(",")
+    deliveries = []
+    for part in parts:
+        deliveries.append(int(part.strip()))
+
+    total = 0
+    for delivery in deliveries:
+        total += delivery
+    average = total / 7
+
+
+    highest_delivery = deliveries[0]
+    highest_day = days[0]
+    lowest_delivery = deliveries[0]
+    lowest_day = days[0]
+    days_meeting_target = 0
+
+    for i in range(7):
+        delivery = deliveries[i]
+        if delivery >= highest_delivery:
+            highest_delivery = delivery
+            highest_day = days[i]
+        if delivery <= lowest_delivery:
+            lowest_delivery = delivery
+            lowest_day = days[i]
+        if delivery >= target:
+            days_meeting_target += 1
+
+    print("Weekly dispatch report")
+    print(f"Total deliveries: {total}")
+    print(f"Average per day: {average:.2f}")
+    print(f"Highest day: {highest_day} ({highest_delivery})")
+    print(f"Lowest day: {lowest_day} ({lowest_delivery})")
+    print(f"Days meeting target: {days_meeting_target}")
+
 
 if __name__ == "__main__":
     main()

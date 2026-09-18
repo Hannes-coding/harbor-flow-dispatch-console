@@ -37,6 +37,27 @@ def get_number(prompt, error_message="Invalid input", cast=float, min_value=0, m
 
         return value
 
+def get_number_list(prompt, error_message="Invalid input", cast=float, min_value=0, count=None):
+    """Keep asking until the user enters a comma-separated list where every
+    value converts with `cast`, is >= min_value, and (optionally) the list
+    has exactly `count` items."""
+    while True:
+        raw = input(prompt)
+        parts = raw.split(",")
+        try:
+            values = [cast(part.strip()) for part in parts]
+            if min_value is not None and any(v < min_value for v in values):
+                raise ValueError
+            if count is not None and len(values) != count:
+                raise ValueError
+        except ValueError:
+            print("")
+            print(error_message)
+            print("")
+            continue
+
+        return values
+
 def main():
     """Start the terminal based application and prompt the user with options for calling other programs or closing the console.
     The cases are where the programs will be called. its based on the programs id.
@@ -104,25 +125,12 @@ def main():
                 print("______________________")
                 print("")
 
-                van_cap = get_number("Van capacity: ", "Error - Value must be greater than zero.")
-
-                while True:
-                    weights_input = input("Enter parcel weights separated by commas: ").split(',')
-                    parecel_weights = []
-
-                    try:
-                        for weight_input in weights_input:
-                            weight = float(weight_input.strip())
-                            if weight < 0:
-                                raise ValueError
-                            parecel_weights.append(weight)
-                    except ValueError:
-                        print("")
-                        print("Error - Value must be greater than zero.")
-                        print("")
-                        continue
-
-                    break
+                van_cap = get_number(
+                    "Van capacity: ", 
+                    "Error - Value must be greater than zero.")
+                parecel_weights = get_number_list(
+                    "Enter parcel weights separated by commas: ", 
+                    "Error - Enter valid numbers separated by commas.")
 
                 check_van_capacity(van_cap, parecel_weights)
             case 6:
@@ -151,24 +159,10 @@ def main():
                 print("__________________________________")
                 print("")
 
-                raw_deliveries = input("Completed deliveries: ")
-                while True:
-                    delivery_parts = raw_deliveries.split(",")
-                    try:
-                        deliveries = [int(part.strip()) for part in delivery_parts]
-                        if len(deliveries) != 7 or any(delivery < 0 for delivery in deliveries):
-                            raise ValueError
-                    except ValueError:
-                        print("")
-                        print("Error - Weekly report requires 7 delivery counts.")
-                        print("")
-                        raw_deliveries = input("Completed deliveries: ")
-                        continue
-                    break
-
+                delivery_count = get_number_list("Completed deliveries: ", "Error - Weekly report requires 7 delivery counts.", int, count=7)
                 target = get_number("Daily target: ", "Error - Value must be greater than zero.", int)
 
-                weekly_report(raw_deliveries, target)
+                weekly_report(delivery_count, target)
             case 8:
                 clear()
                 print("8. Compare service scenarios")
@@ -348,16 +342,11 @@ def classify_service_performance(promised_minutes, actual_minutes, damaged_parce
     return delay, status
 
 #TASK 7
-def weekly_report(raw_deliveries, target):
+def weekly_report(deliveries, target):
 
     clear()
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-
-    parts = raw_deliveries.split(",")
-    deliveries = []
-    for part in parts:
-        deliveries.append(int(part.strip()))
 
     total = 0
     for delivery in deliveries:

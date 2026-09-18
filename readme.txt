@@ -30,6 +30,9 @@ Contribution:
 
 Design notes
 ------------
+- We used clear() function to make the UI clean. 
+- we also used if statement to make clear() function cross-platform for windows, mac and linux
+
 Main function boundaries:
 
 How input validation is organized:

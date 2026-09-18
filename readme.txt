@@ -33,7 +33,7 @@ Design notes
 Main function boundaries:
 
 How input validation is organized:
-- we use while loop for easy ones and try-except loop for the hard ones
+- we used while loop for validations and try-except loop for complex validations
 - we put validation loop inside the cases so after every invalid input just the effected part will be repeat.
 
 How shared calculations are reused:

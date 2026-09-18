@@ -4,11 +4,20 @@ Replace the TODO sections with your team's implementation. Keep the program
 entry point so the file can be run with: python harborflow_app.py
 """
 
+"Feature: you can scroll down to see what you wrote"
+
+#To clear unnecessary parts. (Looks cleaner)
+def clear():
+    import os
+    os.system("clear")
+
+clear()
+clear()
+
 def main():
     """Start the terminal based application and prompt the user with options for calling other programs or closing the console.
     The cases are where the programs will be called. its based on the programs id.
     """
-
     run = True
     while run:
         program_id = int(input("""
@@ -29,39 +38,69 @@ def main():
             if program_id < 1 or program_id > 8:
                 raise ValueError("Error - Select a service from 1 to 8.")
         except ValueError as error:
+            clear()
             print(error)
 
         match program_id:
             case 1:
+                clear()
                 print("Console closed. Dispatch data remains safe.")
                 run = False
             case 2:
+                clear()
+                print("2. Validate booking reference")
+                print("______________________________")
+                print("")
+
                 booking_reference = input("Booking reference: ")
                 normalized_reference = validate_reference(booking_reference)
                 print(normalized_reference)
             case 3:
+                clear()
+                print("3. Calculate delivery quote")
+                print("____________________________")
+                print("")
+
                 distance = float(input("Distance (km): "))
                 while distance < 0:
+                    print("")
                     print("Error - Value must be greater than zero.")
-                    distance = float(input("Distance (km): "))
+                    print("")
+                    distance = float(input("Distance (km): "))  
 
                 weight = float(input("Weight (kg): "))
                 while weight < 0:
+                    print("")
                     print("Error - Value must be greater than zero.")
+                    print("")
                     weight = float(input("Weight (kg): "))
 
                 service_code = (input("Service Code: ")).upper()
                 while service_code != "X" and service_code != "S" and service_code != "P":
+                    print("")
                     print("Error - Service code must be S, X or P.")
+                    print("")
                     service_code = (input("Service Code: ")).upper().strip()
                 consolidate_delivery_quote(distance, weight, service_code)
             case 4:
-                lable = input("Lable: ")
+                clear()
+                print("4. Consolidate parcel labels")
+                print("_____________________________")
+                print("")
+
+                lable = input("Label: ")
                 consolidate_parcel_labels(lable)
             case 5:
+                clear()
+                print("5. Check van capacity")
+                print("______________________")
+                print("")
+
                 van_cap = float(input("Van capacity: "))
                 while van_cap < 0:
-                    print("Invalid input")
+                    print("")
+                    print("Error - Value must be greater than zero.")
+                    print("")
                     van_cap = float(input("Van capacity: "))
 
                 while True:
@@ -75,33 +114,57 @@ def main():
                                 raise ValueError
                             parecel_weights.append(weight)
                     except ValueError:
-                        print("Invalid input")
+                        print("")
+                        print("Error - Value must be greater than zero.")
+                        print("")
                         continue
 
                     break
 
                 check_van_capacity(van_cap, parecel_weights)
             case 6:
+                clear()
+                print("6. Classify service performance")
+                print("________________________________")
+                print("")
+
                 promised_minutes = float(input("Promised minutes: "))
                 while promised_minutes < 0:
+                    print("")
                     print("Error - Value must be greater than zero.")
+                    print("")
                     promised_minutes = float(input("Promised minutes: "))
 
                 actual_minutes = float(input("Actual minutes: "))
                 while actual_minutes < 0:
+                    print("")
                     print("Error - Value must be greater than zero.")
+                    print("")
                     actual_minutes = float(input("Actual minutes: "))
 
                 damaged_parcels = int(input("Damaged parcels: "))
                 while damaged_parcels < 0:
+                    print("")
                     print("Error - Value must be greater than zero.")
+                    print("")
                     damaged_parcels = int(input("Damaged parcels: "))
 
                 delay, status = classify_service_performance(promised_minutes, actual_minutes, damaged_parcels)
 
+                print(f"Promised minutes: {promised_minutes}")
+                print(f"Actual minutes: {actual_minutes}")
+                print(f"Damaged parcels: {damaged_parcels}")
+
+                clear()
+
                 print(f"Delay: {delay} minutes")
                 print(f"Service status: {status}")
             case 7:
+                    clear()
+                    print("7. Produce weekly dispatch report")
+                    print("__________________________________")
+                    print("")
+
                     raw_deliveries = input("Completed deliveries: ")
                     while True:
                         delivery_parts = raw_deliveries.split(",")
@@ -110,26 +173,39 @@ def main():
                             if len(deliveries) != 7 or any(delivery < 0 for delivery in deliveries):
                                 raise ValueError
                         except ValueError:
+                            print("")
                             print("Error - Enter exactly 7 non-negative delivery counts separated by commas.")
+                            print("")
                             raw_deliveries = input("Completed deliveries: ")
                             continue
                         break
                     
                     target = int(input("Daily target: "))
                     while target < 0:
+                        print("")
                         print("Error - Value must be greater than zero.")
+                        print("")
                         target = int(input("Daily target: "))
 
                     weekly_report(raw_deliveries, target)
             case 8:
+                clear()
+                print("8. Compare service scenarios")
+                print("_____________________________")
+                print("")
+
                 distance = float(input("Distance (km): "))
                 while distance < 0:
+                    print("")
                     print("Error - Value must be greater than zero.")
+                    print("")
                     distance = float(input("Distance (km): "))
 
                 weight = float(input("Weight (kg): "))
                 while weight < 0:
+                    print("")
                     print("Error - Value must be greater than zero.")
+                    print("")
                     weight = float(input("Weight (kg): "))
                 compare_delivery_scenarios(distance, weight)
 
@@ -166,6 +242,9 @@ def validate_reference(reference):
 # Prints the delivery quote
 
 def consolidate_delivery_quote(distance, weight, service_code):
+
+    clear()
+
     Base_charge = 45.00
 
     # Determine service type and multiplier
@@ -175,13 +254,16 @@ def consolidate_delivery_quote(distance, weight, service_code):
         service_multiplier = 1.25
     elif service_code == "P":
         service_multiplier = 1.6
-    else:
-        print("Error: Invalid service type.")
-        return
 
     # Calculate the delivery quote
     subtotal = Base_charge + (distance * 6.50) + (weight * 4.00)
     quote = subtotal * service_multiplier
+
+    print(f"Distance (km): {distance}")
+    print(f"Weight (kg): {weight}")
+    print(f"Service code: {service_code}")
+    
+    clear()
 
     print(f"Delivery Quote: {quote:.2f} SEK")
 
@@ -194,12 +276,17 @@ def consolidate_delivery_quote(distance, weight, service_code):
 # Total unique parcels: 3
 
 def consolidate_parcel_labels(label):
+
+    clear()
+
     scanned_labels = label
     unique_labels = []
     for word in label.upper().split():
         clean_word = word.strip(",")
         if clean_word not in unique_labels:
             unique_labels.append(clean_word)
+    print(f"label: {label}")
+    clear()
     print(f"scanned labels: {scanned_labels}")
     print("Unique load list:")
     i = 0
@@ -220,6 +307,9 @@ def consolidate_parcel_labels(label):
 # Remaining capacity: 5.00 kg
 
 def check_van_capacity(van_cap, parecel_weights):
+
+    clear()
+
     parecel_status = []
     i = 0
     free_weight = van_cap
@@ -238,8 +328,12 @@ def check_van_capacity(van_cap, parecel_weights):
         if x == True:
             accepted_parcels += 1
 
+    clear()
+
     print(f"Van capacity (kg): {van_cap}")
     print(f"Parcel weights (kg): {parecel_weights}")
+
+    clear()
     
     i = 0
     while i < len(parecel_status):
@@ -266,6 +360,9 @@ def check_van_capacity(van_cap, parecel_weights):
 # status (string): A description of the shippment status 
 #   (e.i minor or major delay or on time, but most importantly "servide failure" if one of the parcels is damaged).
 def classify_service_performance(promised_minutes, actual_minutes, damaged_parcels):
+
+    clear()
+
     delay = actual_minutes - promised_minutes
 
     if damaged_parcels > 0:
@@ -281,6 +378,9 @@ def classify_service_performance(promised_minutes, actual_minutes, damaged_parce
 
 #TASK 7
 def weekly_report(raw_deliveries, target):
+
+    clear()
+
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
     parts = raw_deliveries.split(",")
@@ -314,7 +414,10 @@ def weekly_report(raw_deliveries, target):
 
     print(f"Completed deliveries: {deliveries}")
     print(f"Daily target: {target}")
-    print("Weekly dispatch report")
+
+    clear()
+
+    print("WEEKLY DISPATCH REPORT")
     print(f"Total deliveries: {total}")
     print(f"Average per day: {average:.2f}")
     print(f"Highest day: {highest_day} ({highest_delivery})")
@@ -323,6 +426,7 @@ def weekly_report(raw_deliveries, target):
 
 #Task 8
 #Make validation loops incase user enters a value outside of the range.
+
 #rules:
 #1) After an error, repeat only the affected prompt.
 #2) The program must not crash
@@ -338,8 +442,8 @@ def weekly_report(raw_deliveries, target):
 #Updated Case 5 (Line 61-84)
 #Updated case 6 (Line 84-104)
 #Updated case 7 (Line 104-124)
-#Added case 8 (Line 124-134)
 #Selecting service part was perfectly done by Hannes so I just added template.
+
 
 
 
@@ -357,6 +461,8 @@ def weekly_report(raw_deliveries, target):
 #After Task 8 is implemented, validate distance and weight before calculating.
 
 def compare_delivery_scenarios(distance, weight):
+    
+    clear()
 
     subtotal = 45.00 + (distance * 6.50) + (weight * 4.00)
     
@@ -370,12 +476,17 @@ def compare_delivery_scenarios(distance, weight):
 
     print(f"Distance (km): {distance}")
     print(f"Wight (kg): {weight}")
-    print("Service comparison")
+
+    clear()
+
+    print("SERVICE COMPARISON")
     print(f"Standard: {standard:.2f} SEK")
     print(f"express: {express:.2f} SEK")
     print(f"priority: {priority:.2f} SEK")
     print(f"Cheapest Service: {cheap}")
     print(f"Most Expensive Service: {expensive}")
+
+
 
 
 

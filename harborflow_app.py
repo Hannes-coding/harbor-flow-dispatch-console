@@ -17,13 +17,16 @@ def clear():
 #to make it cross-platform, I added if statement.
 #on windows, os is called "nt" while on mac it is "posix".
 
-clear()
-clear()
+
 
 def main():
     """Start the terminal based application and prompt the user with options for calling other programs or closing the console.
     The cases are where the programs will be called. its based on the programs id.
     """
+
+    clear()
+    clear()
+
     run = True
     while run:
         program_id = int(input("""
@@ -430,28 +433,6 @@ def weekly_report(raw_deliveries, target):
     print(f"Lowest day: {lowest_day} ({lowest_delivery})")
     print(f"Days meeting target: {days_meeting_target}")
 
-#Task 8
-#Make validation loops incase user enters a value outside of the range.
-
-#rules:
-#1) After an error, repeat only the affected prompt.
-#2) The program must not crash
-
-#Templates
-#Error - Select a service from 1 to 8.
-#Error - Value must be greater than zero.
-#Error - Service code must be S, X or P.
-#Error - Weekly report requires 7 delivery counts.
-
-#What is Done
-#Updated Case 3 (Line 42-58)
-#Updated Case 5 (Line 61-84)
-#Updated case 6 (Line 84-104)
-#Updated case 7 (Line 104-124)
-#Selecting service part was perfectly done by Hannes so I just added template.
-
-
-
 
 #Task 9
 #Compare delivery scenarios
@@ -472,12 +453,11 @@ def compare_delivery_scenarios(distance, weight):
 
     subtotal = 45.00 + (distance * 6.50) + (weight * 4.00)
     
-    standard = subtotal
     express = subtotal * 1.25
     priority = subtotal * 1.6
 
-    cheap = min(standard, express, priority)
-    expensive = max(standard, express, priority)
+    cheap = min(subtotal, express, priority)
+    expensive = max(subtotal, express, priority)
     
 
     print(f"Distance (km): {distance}")
@@ -486,7 +466,7 @@ def compare_delivery_scenarios(distance, weight):
     clear()
 
     print("SERVICE COMPARISON")
-    print(f"Standard: {standard:.2f} SEK")
+    print(f"Standard: {subtotal:.2f} SEK")
     print(f"express: {express:.2f} SEK")
     print(f"priority: {priority:.2f} SEK")
     print(f"Cheapest Service: {cheap}")

@@ -9,7 +9,7 @@ entry point so the file can be run with: python harborflow_app.py
 #To clear unnecessary parts. (Looks cleaner)
 def clear():
     import os
-    os.system("clear")
+    os.system("cls" if os.name == "nt" else "clear")
 
 clear()
 clear()

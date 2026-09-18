@@ -6,6 +6,8 @@ entry point so the file can be run with: python harborflow_app.py
 
 "Feature: you can scroll down to see what you wrote"
 
+import math
+
 #To clear unnecessary parts. (looks cleaner)
 def clear():
     import os
@@ -13,11 +15,27 @@ def clear():
         os.system("cls")
     else:
         os.system("clear")
-#on mac "clear" while on windows "cls".
-#to make it cross-platform, I added if statement.
-#on windows, os is called "nt" while on mac it is "posix".
 
+def get_number(prompt, error_message="Invalid input", cast=float, min_value=0, max_value=math.inf):
+    """Keep asking until the user enters something that converts with `cast`
+    and is >= min_value. Never crashes on bad input."""
+    while True:
+        raw = input(prompt)
+        try:
+            value = cast(raw)
+        except ValueError:
+            print("")
+            print(error_message)
+            print("")
+            continue
 
+        if  value < min_value or value > max_value:
+            print("")
+            print(error_message)
+            print("")
+            continue
+
+        return value
 
 def main():
     """Start the terminal based application and prompt the user with options for calling other programs or closing the console.
@@ -29,7 +47,7 @@ def main():
 
     run = True
     while run:
-        program_id = int(input("""
+        program_id = get_number("""
         HARBORFLOW DISPATCH CONSOLE
         1. Close console
         2. Validate booking reference
@@ -39,16 +57,7 @@ def main():
         6. Classify service performance
         7. Produce weekly dispatch report
         8. Compare service scenarios
-        Select service: """))
-
-        """Simple error handling for the user input"""
-        try:
-            program_id = int(program_id)
-            if program_id < 1 or program_id > 8:
-                raise ValueError("Error - Select a service from 1 to 8.")
-        except ValueError as error:
-            clear()
-            print(error)
+        Select service: """, "Error - Select a service from 1 to 8.", int, 1, 8)
 
         match program_id:
             case 1:
@@ -70,26 +79,16 @@ def main():
                 print("____________________________")
                 print("")
 
-                distance = float(input("Distance (km): "))
-                while distance < 0:
-                    print("")
-                    print("Error - Value must be greater than zero.")
-                    print("")
-                    distance = float(input("Distance (km): "))  
+                distance = get_number("Distance (km): ", "Error - Value must be greater than zero.")
+                weight = get_number("Weight (kg): ", "Error - Value must be greater than zero.")
 
-                weight = float(input("Weight (kg): "))
-                while weight < 0:
-                    print("")
-                    print("Error - Value must be greater than zero.")
-                    print("")
-                    weight = float(input("Weight (kg): "))
-
-                service_code = (input("Service Code: ")).upper()
+                service_code = input("Service Code: ").upper()
                 while service_code != "X" and service_code != "S" and service_code != "P":
                     print("")
                     print("Error - Service code must be S, X or P.")
                     print("")
                     service_code = (input("Service Code: ")).upper().strip()
+
                 consolidate_delivery_quote(distance, weight, service_code)
             case 4:
                 clear()
@@ -105,12 +104,7 @@ def main():
                 print("______________________")
                 print("")
 
-                van_cap = float(input("Van capacity: "))
-                while van_cap < 0:
-                    print("")
-                    print("Error - Value must be greater than zero.")
-                    print("")
-                    van_cap = float(input("Van capacity: "))
+                van_cap = get_number("Van capacity: ", "Error - Value must be greater than zero.")
 
                 while True:
                     weights_input = input("Enter parcel weights separated by commas: ").split(',')
@@ -137,26 +131,9 @@ def main():
                 print("________________________________")
                 print("")
 
-                promised_minutes = float(input("Promised minutes: "))
-                while promised_minutes < 0:
-                    print("")
-                    print("Error - Value must be greater than zero.")
-                    print("")
-                    promised_minutes = float(input("Promised minutes: "))
-
-                actual_minutes = float(input("Actual minutes: "))
-                while actual_minutes < 0:
-                    print("")
-                    print("Error - Value must be greater than zero.")
-                    print("")
-                    actual_minutes = float(input("Actual minutes: "))
-
-                damaged_parcels = int(input("Damaged parcels: "))
-                while damaged_parcels < 0:
-                    print("")
-                    print("Error - Value must be greater than zero.")
-                    print("")
-                    damaged_parcels = int(input("Damaged parcels: "))
+                promised_minutes = get_number("Promised minutes: ", "Error - Value must be greater than zero.")
+                actual_minutes =  get_number("Actual minutes: ", "Error - Value must be greater than zero.")
+                damaged_parcels =  get_number("Damaged parcels: ", "Error - Value must be greater than zero.", int)
 
                 delay, status = classify_service_performance(promised_minutes, actual_minutes, damaged_parcels)
 
@@ -169,53 +146,38 @@ def main():
                 print(f"Delay: {delay} minutes")
                 print(f"Service status: {status}")
             case 7:
-                    clear()
-                    print("7. Produce weekly dispatch report")
-                    print("__________________________________")
-                    print("")
+                clear()
+                print("7. Produce weekly dispatch report")
+                print("__________________________________")
+                print("")
 
-                    raw_deliveries = input("Completed deliveries: ")
-                    while True:
-                        delivery_parts = raw_deliveries.split(",")
-                        try:
-                            deliveries = [int(part.strip()) for part in delivery_parts]
-                            if len(deliveries) != 7 or any(delivery < 0 for delivery in deliveries):
-                                raise ValueError
-                        except ValueError:
-                            print("")
-                            print("Error - Enter exactly 7 non-negative delivery counts separated by commas.")
-                            print("")
-                            raw_deliveries = input("Completed deliveries: ")
-                            continue
-                        break
-                    
-                    target = int(input("Daily target: "))
-                    while target < 0:
+                raw_deliveries = input("Completed deliveries: ")
+                while True:
+                    delivery_parts = raw_deliveries.split(",")
+                    try:
+                        deliveries = [int(part.strip()) for part in delivery_parts]
+                        if len(deliveries) != 7 or any(delivery < 0 for delivery in deliveries):
+                            raise ValueError
+                    except ValueError:
                         print("")
-                        print("Error - Value must be greater than zero.")
+                        print("Error - Weekly report requires 7 delivery counts.")
                         print("")
-                        target = int(input("Daily target: "))
+                        raw_deliveries = input("Completed deliveries: ")
+                        continue
+                    break
 
-                    weekly_report(raw_deliveries, target)
+                target = get_number("Daily target: ", "Error - Value must be greater than zero.", int)
+
+                weekly_report(raw_deliveries, target)
             case 8:
                 clear()
                 print("8. Compare service scenarios")
                 print("_____________________________")
                 print("")
 
-                distance = float(input("Distance (km): "))
-                while distance < 0:
-                    print("")
-                    print("Error - Value must be greater than zero.")
-                    print("")
-                    distance = float(input("Distance (km): "))
+                distance = get_number("Distance (km): ", "Error - Value must be greater than zero.")
+                weight= get_number("Weight (kg): ", "Error - Value must be greater than zero.")
 
-                weight = float(input("Weight (kg): "))
-                while weight < 0:
-                    print("")
-                    print("Error - Value must be greater than zero.")
-                    print("")
-                    weight = float(input("Weight (kg): "))
                 compare_delivery_scenarios(distance, weight)
 
 # TASK 2
@@ -223,7 +185,7 @@ def main():
 # Valid reference: HFL-NOR-2048
 
 # Booking reference: HFL-N4R-2048 (Invalid)
-# Invalid booking reference. 
+# Invalid booking reference.
 
 def contains_hyphens(reference):
     return reference[3] == "-" and reference[7] == "-"
@@ -271,7 +233,7 @@ def consolidate_delivery_quote(distance, weight, service_code):
     print(f"Distance (km): {distance}")
     print(f"Weight (kg): {weight}")
     print(f"Service code: {service_code}")
-    
+
     clear()
 
     print(f"Delivery Quote: {quote:.2f} SEK")
@@ -322,7 +284,7 @@ def check_van_capacity(van_cap, parecel_weights):
     parecel_status = []
     i = 0
     free_weight = van_cap
-    
+
     while i < len(parecel_weights):
         if free_weight - parecel_weights[i] >= 0:
             free_weight -= parecel_weights[i]
@@ -330,7 +292,7 @@ def check_van_capacity(van_cap, parecel_weights):
         else:
             parecel_status.append(False)
         i += 1
-        
+
     # Start count at 0
     accepted_parcels = 0
     for x in parecel_status:
@@ -343,7 +305,7 @@ def check_van_capacity(van_cap, parecel_weights):
     print(f"Parcel weights (kg): {parecel_weights}")
 
     clear()
-    
+
     i = 0
     while i < len(parecel_status):
         if parecel_status[i] == True:
@@ -351,7 +313,7 @@ def check_van_capacity(van_cap, parecel_weights):
         else:
             print(f"Parcel {i+1}: REJECTED")
         i += 1
-        
+
     print(f"Accepted parcels: {accepted_parcels}")
     print(f"Loaded weight: {(van_cap - free_weight):.2f} kg")
     print(f"Remaining capacity: {free_weight:.2f} kg")
@@ -366,7 +328,7 @@ def check_van_capacity(van_cap, parecel_weights):
 #
 # RETURNS
 # delay (float): The delay in minutes.
-# status (string): A description of the shippment status 
+# status (string): A description of the shippment status
 #   (e.i minor or major delay or on time, but most importantly "servide failure" if one of the parcels is damaged).
 def classify_service_performance(promised_minutes, actual_minutes, damaged_parcels):
 
@@ -448,17 +410,17 @@ def weekly_report(raw_deliveries, target):
 #After Task 8 is implemented, validate distance and weight before calculating.
 
 def compare_delivery_scenarios(distance, weight):
-    
+
     clear()
 
     subtotal = 45.00 + (distance * 6.50) + (weight * 4.00)
-    
+
     express = subtotal * 1.25
     priority = subtotal * 1.6
 
     cheap = min(subtotal, express, priority)
     expensive = max(subtotal, express, priority)
-    
+
 
     print(f"Distance (km): {distance}")
     print(f"Wight (kg): {weight}")

@@ -6,10 +6,16 @@ entry point so the file can be run with: python harborflow_app.py
 
 "Feature: you can scroll down to see what you wrote"
 
-#To clear unnecessary parts. (Looks cleaner)
+#To clear unnecessary parts. (looks cleaner)
 def clear():
     import os
-    os.system("cls" if os.name == "nt" else "clear")
+    if os.name == "nt":
+        os.system("cls")
+    else:
+        os.system("clear")
+#on mac "clear" while on windows "cls".
+#to make it cross-platform, I added if statement.
+#on windows, os is called "nt" while on mac it is "posix".
 
 clear()
 clear()

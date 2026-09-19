@@ -30,19 +30,19 @@ Contribution:
 
 Design notes
 ------------
-- We used clear() function to make the UI clean. 
-- we also used if statement to make clear() function cross-platform for windows, mac and linux
+- Used clear() function to make the UI clean. 
+- Also used if statement to make clear() function cross-platform for windows, mac and linux
 
 Main function boundaries:
 
 How input validation is organized:
-- we used while loop for easy validations and try-except loop for complex validations
-- we put validation loop inside the cases so after every invalid input, just the effected part will be repeat.
+- Used while loop for easy validations and try-except loop for complex validations
+- Put validation loop inside the cases so after every invalid input, just the effected part will be repeat.
 
 How shared calculations are reused:
-- We created a calculation function called calculate_delivery_quote.
-- We reused it to calculate the quote variable in Task 3.
-- We reused it to calculate the standard, express, and priority variables in Task 9.
+- Created a calculation function called "calculate_delivery_quote".
+- Reused it to calculate the quote variable in Task 3.
+- Reused it to calculate the standard, express, and priority variables in Task 9.
 
 Known limitations
 -----------------

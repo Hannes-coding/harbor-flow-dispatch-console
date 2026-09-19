@@ -40,11 +40,13 @@ How input validation is organized:
 - we put validation loop inside the cases so after every invalid input, just the effected part will be repeat.
 
 How shared calculations are reused:
-
+- We created a calculation function called calculate_delivery_quote.
+- We reused it to calculate the quote variable in Task 3.
+- We reused it to calculate the standard, express, and priority variables in Task 9.
 
 Known limitations
 -----------------
-The only limitation is when you try to put letter instead of number. Therefore, Task 8 is done.
+There are no Limitations.
 
 What we have done on Task 8:
 - added try-except loop for service selecting part (Line 45-51)

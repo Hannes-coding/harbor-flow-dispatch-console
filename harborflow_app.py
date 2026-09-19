@@ -206,11 +206,15 @@ def validate_reference(reference):
 #
 # Prints the delivery quote
 
+
+def calculate_delivery_quote(distance, weight, service_multiplier):
+    subtotal = 45.00 + (distance * 6.50) + (weight * 4.00)
+    return subtotal * service_multiplier
+
+
 def consolidate_delivery_quote(distance, weight, service_code):
 
     clear()
-
-    Base_charge = 45.00
 
     # Determine service type and multiplier
     if service_code == "S":
@@ -221,8 +225,7 @@ def consolidate_delivery_quote(distance, weight, service_code):
         service_multiplier = 1.6
 
     # Calculate the delivery quote
-    subtotal = Base_charge + (distance * 6.50) + (weight * 4.00)
-    quote = subtotal * service_multiplier
+    quote = calculate_delivery_quote(distance, weight, service_multiplier)
 
     print(f"Distance (km): {distance}")
     print(f"Weight (kg): {weight}")
@@ -402,26 +405,30 @@ def compare_delivery_scenarios(distance, weight):
 
     clear()
 
-    subtotal = 45.00 + (distance * 6.50) + (weight * 4.00)
+    standard = calculate_delivery_quote(distance, weight, 1)
+    express = calculate_delivery_quote(distance, weight, 1.25)
+    priority = calculate_delivery_quote(distance, weight, 1.6)
 
-    express = subtotal * 1.25
-    priority = subtotal * 1.6
-
-    cheap = min(subtotal, express, priority)
-    expensive = max(subtotal, express, priority)
+    cheap = min(standard, express, priority)
+    expensive = max(standard, express, priority)
+    services = {
+        standard: "Standard",
+        express: "Express",
+        priority: "Priority",
+    }
 
 
     print(f"Distance (km): {distance}")
-    print(f"Wight (kg): {weight}")
+    print(f"Weight (kg): {weight}")
 
     clear()
 
     print("SERVICE COMPARISON")
-    print(f"Standard: {subtotal:.2f} SEK")
-    print(f"express: {express:.2f} SEK")
-    print(f"priority: {priority:.2f} SEK")
-    print(f"Cheapest Service: {cheap}")
-    print(f"Most Expensive Service: {expensive}")
+    print(f"Standard: {standard:.2f} SEK")
+    print(f"Express: {express:.2f} SEK")
+    print(f"Priority: {priority:.2f} SEK")
+    print(f"Cheapest Service: {services[cheap]}")
+    print(f"Most Expensive Service: {services[expensive]}")
 
 
 
